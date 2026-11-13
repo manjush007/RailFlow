@@ -28,7 +28,7 @@ This project is being used to study Java web development, database connectivity,
 ### 3. Train Enquiry
 ![Train Enquiry](Screenshots/Enquiry.png)
 
-### 4. Railway Home Page
+### 4. Available Trains
 ![Railway Home Page](Screenshots/railway.png)
 
 ---
