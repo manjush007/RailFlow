@@ -271,21 +271,23 @@ The host provides the public URL; `localhost` URLs are only accessible from the 
 
 ## Screenshots
 
-The original project includes screenshots of several application pages, including:
+## Screenshots
 
-- Login page
-- User registration
-- User profile
-- Train search
-- Available trains
-- Ticket booking
-- Booking details
-- Booking history
-- Fare enquiry
-- Password changes
-- Administrator train management
 
-Refer to the original repository's `Screenshots` directory for the available images.
+### 1. Login Interface 1
+![Login Interface 1](Screenshots/Login1.png)
+
+### 2. Login Interface 2
+![Login Interface 2](Screenshots/Login2.png)
+
+### 4. Train Search
+![Train Search](Screenshots/Search_copy.png)
+
+### 5. Train Enquiry
+![Train Enquiry](Screenshots/Enquiry.png)
+
+### 6. Railway Home Page
+![Railway Home Page](Screenshots/railway.png)
 
 ---
 
