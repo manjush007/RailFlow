@@ -1,19 +1,37 @@
-# Train Ticket Reservation System
+# RailFlow
 
-A Java-based web application for searching trains, checking availability and fares, and managing ticket reservations.
-
-**Maintainer:** Manjush Premkumar  
+A Java-based web application for searching trains, checking availability and fares, and managing ticket reservations.  
 **Technologies:** Java, Servlets, JDBC, Oracle SQL, HTML, CSS, Bootstrap
 
 ---
 
 ## Project Overview
 
-The Train Ticket Reservation System is a web application designed to simplify train information searches and ticket reservation management.
+RailFlow is a web application designed to simplify train information searches and ticket reservation management.
 
 Users can register, log in, search for trains between stations, check fares, book tickets, and view their booking history. Administrators can manage train information through dedicated administrative functionality.
 
 This project is being used to study Java web development, database connectivity, and the architecture of web applications.
+
+
+
+
+## Screenshots
+
+
+### 1. Login Interface 1
+![Login Interface 1](Screenshots/Login1.png)
+
+### 2. Train Search
+![Train Search](Screenshots/Search.png)
+
+### 3. Train Enquiry
+![Train Enquiry](Screenshots/Enquiry.png)
+
+### 4. Railway Home Page
+![Railway Home Page](Screenshots/railway.png)
+
+---
 
 ## Features
 
@@ -269,27 +287,7 @@ The host provides the public URL; `localhost` URLs are only accessible from the 
 
 ---
 
-## Screenshots
 
-## Screenshots
-
-
-### 1. Login Interface 1
-![Login Interface 1](Screenshots/Login1.png)
-
-### 2. Login Interface 2
-![Login Interface 2](Screenshots/Login2.png)
-
-### 4. Train Search
-![Train Search](Screenshots/Search_copy.png)
-
-### 5. Train Enquiry
-![Train Enquiry](Screenshots/Enquiry.png)
-
-### 6. Railway Home Page
-![Railway Home Page](Screenshots/railway.png)
-
----
 
 ## Learning Objectives
 
