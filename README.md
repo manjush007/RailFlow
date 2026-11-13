@@ -19,7 +19,7 @@ This project is being used to study Java web development, database connectivity,
 ## Screenshots
 
 
-### 1. Login Interface 1
+### 1. Login Interface
 ![Login Interface 1](Screenshots/Login1.png)
 
 ### 2. Train Search
