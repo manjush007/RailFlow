@@ -28,7 +28,7 @@ public class AdminLogoutServlet extends HttpServlet {
 		res.setContentType("text/html");
 		PrintWriter pw = res.getWriter();
 		if (TrainUtil.isLoggedIn(req, UserRole.ADMIN)) {
-			TrainUtil.logout(res);
+			TrainUtil.logout(req);
 			RequestDispatcher rd = req.getRequestDispatcher("AdminLogin.html");
 			rd.include(req, res);
 			pw.println("<div class='tab'><p1 class='menu'>You have been successfully logged out !</p1></div>");

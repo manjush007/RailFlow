@@ -142,7 +142,7 @@ CONNECT RESERVATION/"ChooseYourOwnPassword";
 ```sql
 CREATE TABLE CUSTOMER (
     MAILID VARCHAR2(40) PRIMARY KEY,
-    PWORD VARCHAR2(20) NOT NULL,
+    PWORD VARCHAR2(128 CHAR) NOT NULL,
     FNAME VARCHAR2(20) NOT NULL,
     LNAME VARCHAR2(20),
     ADDR VARCHAR2(100),
@@ -151,7 +151,7 @@ CREATE TABLE CUSTOMER (
 
 CREATE TABLE ADMIN (
     MAILID VARCHAR2(40) PRIMARY KEY,
-    PWORD VARCHAR2(20) NOT NULL,
+    PWORD VARCHAR2(128 CHAR) NOT NULL,
     FNAME VARCHAR2(20) NOT NULL,
     LNAME VARCHAR2(20),
     ADDR VARCHAR2(100),
@@ -180,7 +180,7 @@ CREATE TABLE HISTORY (
 );
 ```
 
-> **Security note:** The schema above reflects the original project's design. Before using the application beyond local learning, review its password-storage implementation and replace plaintext password storage with a secure password-hashing approach.
+Passwords are stored as salted PBKDF2 hashes. Do not seed the public deployment with shared administrator credentials or real personal data. Users can register accounts through the application.
 
 #### Step 4: Verify the tables
 
@@ -191,7 +191,7 @@ SELECT * FROM TRAIN;
 SELECT * FROM HISTORY;
 ```
 
-The original repository includes sample data in its database setup instructions. Consult the original README if you need those specific sample records.
+For an existing database, apply [`database/security-migration.sql`](./database/security-migration.sql) before deploying this version. It widens password columns for the hashes and removes the original publicly known demo accounts and their sample history.
 
 ---
 
@@ -237,23 +237,35 @@ Resolve any dependency or compatibility errors before continuing.
 
 ### Step 4: Configure the database
 
-Create the Oracle database tables and configure the application's database connection settings according to the source code.
+Create the Oracle database tables. Set these environment variables in your hosting provider's secret/configuration settings:
 
-Do not commit real database credentials to GitHub.
+- `DATABASE_URL` — Oracle JDBC URL, for example `jdbc:oracle:thin:@//db-host:1521/FREEPDB1`
+- `DATABASE_USERNAME` — a least-privilege application database user
+- `DATABASE_PASSWORD` — that user's password
+
+The app reads connection credentials from the environment, not from the committed properties file. Never expose the database port publicly; allow access only from the app host or private network.
+
+For local development, set the same variables in the terminal before starting the app. Do not commit credentials or use real personal data in a portfolio demo.
+
+Example for the local Oracle Free container:
+
+```bash
+export DATABASE_URL='jdbc:oracle:thin:@localhost:1521/FREEPDB1'
+export DATABASE_USERNAME='RESERVATION'
+export DATABASE_PASSWORD='your-local-database-password'
+mvn clean package
+java -jar target/dependency/webapp-runner.jar --port 8081 target/TrainBook-1.0.0-SNAPSHOT.war
+```
+
+For a public demo, set the database values as private environment variables in the hosting provider instead of using this local example. Start with a fresh demo database; do not copy real customer records.
 
 ### Step 5: Configure Tomcat
 
 Import the project into Eclipse as an existing Maven project. Configure a compatible Tomcat server and deploy the web application.
 
-The original documentation uses port `8083` and the context path `/trainbook/`.
+This project builds a WAR file. Deploy `target/TrainBook-1.0.0-SNAPSHOT.war` to a compatible Tomcat host or run it with the included webapp runner. A public deployment must use HTTPS and a private database connection.
 
-If your local configuration matches those settings, the application may be accessible at:
-
-```text
-http://localhost:8083/trainbook/
-```
-
-This address works only when the application has been configured and started successfully.
+The host provides the public URL; `localhost` URLs are only accessible from the server itself.
 
 ---
 

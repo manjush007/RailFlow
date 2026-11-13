@@ -19,4 +19,6 @@ public interface UserService {
 	
 	public UserBean loginUser(String username, String password) throws TrainException;
 
+	public String changePassword(String username, String oldPassword, String newPassword);
+
 }

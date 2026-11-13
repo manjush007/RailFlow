@@ -9,34 +9,38 @@ import com.shashi.beans.TrainException;
 import com.shashi.constant.ResponseCode;
 
 public class DBUtil {
-	private static Connection con;
+	private static final String DATABASE_URL;
+	private static final String DATABASE_USERNAME;
+	private static final String DATABASE_PASSWORD;
 
 	static {
 
 		ResourceBundle rb = ResourceBundle.getBundle("application");
+		DATABASE_URL = requiredEnvironmentVariable("DATABASE_URL");
+		DATABASE_USERNAME = requiredEnvironmentVariable("DATABASE_USERNAME");
+		DATABASE_PASSWORD = requiredEnvironmentVariable("DATABASE_PASSWORD");
 
 		try {
 			Class.forName(rb.getString("driverName"));
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			System.out.println(rb.getString("connectionString"));
-			System.out.println(rb.getString("username"));
-			System.out.println(rb.getString("password"));
-			con = DriverManager.getConnection(rb.getString("connectionString"), rb.getString("username"),
-					rb.getString("password"));
-			System.out.println("Connection Success!!");
-		} catch (SQLException e) {
-
-			e.printStackTrace();
+			throw new ExceptionInInitializerError(e);
 		}
 	}
 
+	private static String requiredEnvironmentVariable(String name) {
+		String value = System.getenv(name);
+		if (value == null || value.trim().isEmpty()) {
+			throw new ExceptionInInitializerError("Required environment variable is not set: " + name);
+		}
+		return value;
+	}
+
 	public static Connection getConnection() throws TrainException {
-		if (con == null)
+		try {
+			return DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
+		} catch (SQLException e) {
+			System.err.println("Database connection failed: " + e.getMessage());
 			throw new TrainException(ResponseCode.DATABASE_CONNECTION_FAILURE);
-		return con;
+		}
 	}
 }

@@ -36,16 +36,37 @@ public class TrainBwStn extends HttpServlet {
 				rd.include(req, res);
 				pw.println("<div class='main'><p1 class='menu'>Trains BetWeen Station "
 						+ req.getParameter("fromstation") + " and " + req.getParameter("tostation") + "</p1></div>");
-				pw.println("<div class='tab'><table><tr><th>Train Name</th><th>Train No</th>"
-						+ "<th>From Stn</th><th>To Stn</th><th>Time</th><th>Seats</th><th>Fare (INR)</th><th>Action</th></tr>");
+				TrainBean cheapestTrain = null;
+				TrainBean mostSeatsTrain = null;
 				for (TrainBean train : trains) {
-					int hr = (int) (Math.random() * 24);
-					int min = (int) (Math.random() * 60);
-					String time = (hr < 10 ? ("0" + hr) : hr) + ":" + ((min < 10) ? "0" + min : min);
-
+					if (train.getSeats() <= 0) {
+						continue;
+					}
+					if (cheapestTrain == null || train.getFare() < cheapestTrain.getFare()) {
+						cheapestTrain = train;
+					}
+					if (mostSeatsTrain == null || train.getSeats() > mostSeatsTrain.getSeats()) {
+						mostSeatsTrain = train;
+					}
+				}
+				pw.println("<section class='trip-suggestions'><h2>Smart trip suggestions</h2>"
+						+ "<p>Choose the lowest fare or the train with the most seats available. "
+						+ "Schedule times are not available in this app yet.</p>");
+				if (cheapestTrain == null) {
+					pw.println("<p class='suggestion-empty'>No seats are currently available on this route.</p>");
+				} else if (mostSeatsTrain == cheapestTrain) {
+					printSuggestion(pw, cheapestTrain, "Best overall", "Lowest fare and most seats available");
+				} else {
+					printSuggestion(pw, cheapestTrain, "Lowest fare", "Lowest fare among trains with seats");
+					printSuggestion(pw, mostSeatsTrain, "Most seats", "Most seats currently available");
+				}
+				pw.println("</section>");
+				pw.println("<div class='tab'><table><tr><th>Train Name</th><th>Train No</th>"
+						+ "<th>From Stn</th><th>To Stn</th><th>Seats</th><th>Fare (INR)</th><th>Action</th></tr>");
+				for (TrainBean train : trains) {
 					pw.println("" + "<tr><td>" + train.getTr_name() + "</td>" + "<td>" + train.getTr_no() + "</td>"
-							+ "<td>" + train.getFrom_stn() + "</td>" + "<td>" + train.getTo_stn() + "</td>" + "<td>"
-							+ time + "</td>" + "<td>" + train.getSeats() + "</td>" + "<td>" + train.getFare()
+							+ "<td>" + train.getFrom_stn() + "</td>" + "<td>" + train.getTo_stn() + "</td>"
+							+ "<td>" + train.getSeats() + "</td>" + "<td>" + train.getFare()
 							+ " RS</td><td><a href='booktrainbyref?trainNo=" + train.getTr_no() + "&fromStn="
 							+ train.getFrom_stn() + "&toStn=" + train.getTo_stn()
 							+ "'><div class='red'>Book Now</div></a></td>" + "</tr>");
@@ -61,5 +82,14 @@ public class TrainBwStn extends HttpServlet {
 			throw new TrainException(422, this.getClass().getName() + "_FAILED", e.getMessage());
 		}
 
+	}
+
+	private void printSuggestion(PrintWriter pw, TrainBean train, String title, String detail) {
+		pw.println("<article class='suggestion-card'><span class='suggestion-label'>" + title
+				+ "</span><h3>" + train.getTr_name() + "</h3><p>" + train.getFrom_stn() + " to "
+				+ train.getTo_stn() + "</p><p>" + detail + "</p><p><strong>INR " + train.getFare()
+				+ "</strong> &middot; " + train.getSeats() + " seats available</p><a class='suggestion-book' href='booktrainbyref?trainNo="
+				+ train.getTr_no() + "&fromStn=" + train.getFrom_stn() + "&toStn=" + train.getTo_stn()
+				+ "'>Book this train</a></article>");
 	}
 }

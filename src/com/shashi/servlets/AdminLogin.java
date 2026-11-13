@@ -31,7 +31,7 @@ public class AdminLogin extends HttpServlet {
 		String uName = req.getParameter("uname");
 		String pWord = req.getParameter("pword");
 		try {
-			String message = TrainUtil.login(req, res, UserRole.ADMIN, uName, pWord);
+			String message = TrainUtil.login(req, UserRole.ADMIN, uName, pWord);
 			if ("SUCCESS".equalsIgnoreCase(message)) {
 
 				RequestDispatcher rd = req.getRequestDispatcher("AdminHome.html");

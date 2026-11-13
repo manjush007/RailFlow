@@ -21,7 +21,7 @@ public class UserLogoutServlet extends HttpServlet {
 		PrintWriter pw = res.getWriter();
 
 		if (TrainUtil.isLoggedIn(req, UserRole.CUSTOMER)) {
-			TrainUtil.logout(res);
+			TrainUtil.logout(req);
 			RequestDispatcher rd = req.getRequestDispatcher("UserLogin.html");
 			rd.include(req, res);
 			pw.println("<div class='tab'><p1 class='menu'>You have been successfully logged out !</p1></div>");

@@ -1,12 +1,7 @@
 package com.shashi.utility;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.shashi.beans.TrainException;
 import com.shashi.beans.UserBean;
@@ -17,36 +12,21 @@ import com.shashi.service.impl.UserServiceImpl;
 
 public class TrainUtil {
 
-	public static Optional<String> readCookie(HttpServletRequest request, String key) {
-		Cookie[] cookies = request.getCookies();
-		if (cookies == null) {
-			return Optional.empty();
-		}
-		return Arrays.stream(cookies).filter(c -> key.equals(c.getName())).map(Cookie::getValue).findAny();
-	}
-
-	public static String login(HttpServletRequest request, HttpServletResponse response, UserRole userRole,
-			String username, String password) {
+	public static String login(HttpServletRequest request, UserRole userRole, String username, String password) {
 		UserService userService = new UserServiceImpl(userRole);
 		String responseCode = ResponseCode.UNAUTHORIZED.toString();
 		try {
 			UserBean user = userService.loginUser(username, password);
 
-			// Add the user details to the ServletContext with key as role name
-			request.getServletContext().setAttribute(userRole.toString(), user);
-
-			// Store the user firstName and mailId in the http session
-			request.getSession().setAttribute("uName", user.getFName());
-			request.getSession().setAttribute("mailid", user.getMailId());
-
-			// Add the sessionId to the cookie with key as sessionId
-			Cookie cookie = new Cookie("sessionIdFor" + userRole.toString(), UUID.randomUUID().toString());
-
-			// set the max age for the cookie
-			cookie.setMaxAge(600); // Expires after 10 MIN
-
-			// add the cookie to the response
-			response.addCookie(cookie);
+			HttpSession oldSession = request.getSession(false);
+			if (oldSession != null) {
+				oldSession.invalidate();
+			}
+			HttpSession session = request.getSession(true);
+			session.setMaxInactiveInterval(600);
+			session.setAttribute(userRole.toString(), user);
+			session.setAttribute("uName", user.getFName());
+			session.setAttribute("mailid", user.getMailId());
 
 			// set the responseCode to success
 			responseCode = ResponseCode.SUCCESS.toString();
@@ -59,8 +39,8 @@ public class TrainUtil {
 	}
 
 	public static boolean isLoggedIn(HttpServletRequest request, UserRole userRole) {
-		Optional<String> sessionId = readCookie(request, "sessionIdFor" + userRole.toString());
-		return sessionId != null && sessionId.isPresent();
+		HttpSession session = request.getSession(false);
+		return session != null && session.getAttribute(userRole.toString()) instanceof UserBean;
 	}
 
 	public static void validateUserAuthorization(HttpServletRequest request, UserRole userRole) throws TrainException {
@@ -69,18 +49,11 @@ public class TrainUtil {
 		}
 	}
 
-	public static boolean logout(HttpServletResponse response) {
-
-		// Set the max age to 0 for the admin and customer cookies
-		Cookie cookie = new Cookie("sessionIdFor" + UserRole.ADMIN.toString(), UUID.randomUUID().toString());
-		cookie.setMaxAge(0);
-
-		Cookie cookie2 = new Cookie("sessionIdFor" + UserRole.CUSTOMER.toString(), UUID.randomUUID().toString());
-		cookie2.setMaxAge(0);
-
-		response.addCookie(cookie);
-		response.addCookie(cookie2);
-
+	public static boolean logout(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
 		return true;
 	}
 
@@ -93,6 +66,7 @@ public class TrainUtil {
 	}
 
 	public static UserBean getCurrentCustomer(HttpServletRequest req) {
-		return (UserBean) req.getServletContext().getAttribute(UserRole.CUSTOMER.toString());
+		HttpSession session = req.getSession(false);
+		return session == null ? null : (UserBean) session.getAttribute(UserRole.CUSTOMER.toString());
 	}
 }

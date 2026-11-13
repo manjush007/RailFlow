@@ -34,7 +34,7 @@ public class ViewUserProfile extends HttpServlet {
 		pw.println("<div class='tab'>Users Profile View</div>");
 		pw.println("<div class='tab'>" + "<table>" + "<tr><td>Profile Photo :</td><td>Not Available</td></tr>"
 				+ "<tr><td>User Name :</td><td>" + ub.getMailId() + "</td></tr>"
-				+ "<tr><td>Password :</td><td><input type='password' disabled value='" + ub.getPWord() + "'/></td></tr>"
+				+ "<tr><td>Password :</td><td>Hidden</td></tr>"
 				+ "<tr><td>First Name :</td><td>" + ub.getFName() + "</td></tr>" + "<tr><td>Last Name :</td><td>"
 				+ ub.getLName() + "</td></tr>" + "<tr><td>Address :</td><td>" + ub.getAddr() + "</td></tr>"
 				+ "<tr><td>Phone No:</td><td>" + ub.getPhNo() + "</td></tr>" + "<tr><td>Mail Id :</td><td>"

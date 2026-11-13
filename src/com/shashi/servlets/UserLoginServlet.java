@@ -27,7 +27,7 @@ public class UserLoginServlet extends HttpServlet {
 		String uName = req.getParameter("uname");
 		String pWord = req.getParameter("pword");
 
-		String responseMsg = TrainUtil.login(req, res, UserRole.CUSTOMER, uName, pWord);
+		String responseMsg = TrainUtil.login(req, UserRole.CUSTOMER, uName, pWord);
 		if (ResponseCode.SUCCESS.toString().equalsIgnoreCase(responseMsg)) {
 			RequestDispatcher rd = req.getRequestDispatcher("UserHome.html");
 			rd.include(req, res);

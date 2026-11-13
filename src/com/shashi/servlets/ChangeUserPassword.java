@@ -32,9 +32,9 @@ public class ChangeUserPassword extends HttpServlet {
 				+ "<p1 class='menu'><a href='changeuserpassword'>Change Password</a></p1>" + "</div>");
 		pw.println("<div class='tab'>Password Change</div>");
 		pw.println("<div class='tab'>" + "<table><form action='changeuserpwd' method='post'>"
-				+ "<tr><td>User Name :</td><td><input type='text' name='username' placeholder='Enter Your MailId'></td></tr>"
-				+ "<tr><td>Old Password :</td><td><input type='password' name='oldpassword'></td></tr>"
-				+ "<tr><td>New Password :</td><td><input type='password' name='newpassword'></td></tr>"
+				+ "<tr><td>User Name :</td><td><input type='text' name='username' placeholder='Enter Your MailId' required></td></tr>"
+				+ "<tr><td>Old Password :</td><td><input type='password' name='oldpassword' required></td></tr>"
+				+ "<tr><td>New Password :</td><td><input type='password' name='newpassword' minlength='12' maxlength='128' required></td></tr>"
 				+ "<tr><td></td><td><input type='submit' name='submit' value='Change Password'></td></tr>"
 				+ "</form></table>" + "</div>");
 
